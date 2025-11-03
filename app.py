@@ -14,7 +14,8 @@ db.init_app(app)
 @app.route('/')
 def index():
     campaigns = Campaign.query.all()
-    return render_template('index.html', campaigns=campaigns)
+    # Change here: render dashboard.html instead of index.html
+    return render_template('dashboard.html', campaigns=campaigns)
 
 # ---------- CREATE NEW CAMPAIGN ----------
 @app.route('/create_campaign', methods=['POST'])
@@ -61,7 +62,7 @@ def access_email(campaign_id, email):
         attempt.campaign.accessed += 1
         attempt.campaign.update_success_rate()
         db.session.commit()
-    return jsonify({"message": "Accessed recorded"})
+    return jsonify({"message": "Access recorded"})
 
 # ---------- TRACK REPORT ----------
 @app.route('/report/<int:campaign_id>/<email>')
@@ -96,18 +97,13 @@ def report():
 
     return render_template('report.html', campaigns=campaigns)
 
-'''
-@app.route('/report')
-def reports():
-    campaigns = Campaign.query.all()
-    return render_template('report.html', campaigns=campaigns)
-'''
 # ---------- LANDING SIMULATION ----------
 @app.route('/landing_sim')
 def landing_sim():
     email = request.args.get('email')
     cid = request.args.get('cid')
     return render_template('landing_sim.html', email=email, cid=cid)
+
 
 if __name__ == '__main__':
     with app.app_context():
